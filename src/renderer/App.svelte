@@ -1,7 +1,10 @@
-<h1>Hello {name}!</h1>
+<Tip/>
+<svelte:component this="{$currentPage}" name="page" />
 
-<style>
-  h1 {
-    color: purple;
-  }
-</style>
+<script>
+    export default {
+        components: {
+            Tip: './components/Tip.svelte'
+        },
+    };
+</script>

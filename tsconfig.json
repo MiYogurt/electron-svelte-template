@@ -1,6 +1,7 @@
 {
   "extends": "./node_modules/electron-webpack/tsconfig-base.json",
   "compilerOptions": {
-    "types": ["./src/main/shim.d.ts"]
+    "typeRoots": ["./src/main/types"],
+    "noUnusedLocals": false
   }
 }

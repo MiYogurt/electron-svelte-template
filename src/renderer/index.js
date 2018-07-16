@@ -1,9 +1,9 @@
 import App from './App.svelte'
-import { ipcRenderer } from 'electron'
+import store from './store'
 
 const app = new App({
-  target: document.querySelector('#app'),
-  data: {
-    name: 'world'
-  }
+    target: document.querySelector('#app'),
+    store
 })
+console.log(store);
+window.store = store
