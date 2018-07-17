@@ -58,7 +58,7 @@ function crawlSetUp() {
       folderName
     )
     store.set('stop', false)
-    // await download(url, plugin, { path: savePath })
+    await download(url, plugin, { path: savePath })
     await transform(savePath)
     store.set('stop', false)
   })

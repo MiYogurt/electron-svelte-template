@@ -65,7 +65,7 @@ const transform = async (pathRoot: string) => {
   await ensureDir(chapterSavePath)
   try {
     const chapters = await readJson(chaptersPath)
-    let i = 215
+    let i = 0
     const len = chapters.length
     while (i < len) {
       if (
