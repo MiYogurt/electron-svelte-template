@@ -5,11 +5,12 @@ import CrawlStore from './pages/CrawlStore.svelte'
 import Main from './pages/Main.svelte'
 
 const store = new Store({
-    currentPage: CrawlStore,
+    currentPage: Main,
     msg: {
         type: 'success',
         content: ''
-    }
+    },
+    start: false
 });
 
 store.changePage = changePage.bind(store)
@@ -53,8 +54,19 @@ function success(content, timer = 1000) {
     setTimeout(resetMsg, timer);
 }
 
+function warring(content, timer = 1000) {
+    store.set({
+        msg: {
+            type: 'warring',
+            content
+        }
+    })
+    setTimeout(resetMsg, timer);
+}
+
 store.setMsg = setMsg.bind(store)
 store.success = success.bind(store)
+store.warring = warring.bind(store)
 
 export { changePage, setMsg, success }
 

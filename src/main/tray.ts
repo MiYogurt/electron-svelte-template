@@ -1,10 +1,8 @@
 import create, { init, store } from 'electron-auto-setting'
 import { app, Tray, Menu } from 'electron'
 import { resolve } from 'path'
-import { fromEvent } from 'rxjs'
 
-let win = null
-let tray = null
+let win
 
 let setting = [
   {
@@ -25,6 +23,11 @@ let setting = [
         type: 'string',
         label: '下载并发量',
         defaultValue: 5
+      },
+      TTS_WAIT: {
+        type: 'string',
+        label: 'TTS 等待时长（毫秒）',
+        defaultValue: 1500
       }
     }
   },
@@ -57,12 +60,4 @@ function opensetting() {
   win = create({}, true)
 }
 
-fromEvent(<any>app, 'ready').subscribe(() => {
-  tray = new Tray(resolve(__dirname, 'tray_w24h24.png'))
-  const contextMenu = Menu.buildFromTemplate([
-    { label: '设置', click: opensetting }
-  ])
-  tray.setContextMenu(contextMenu)
-})
-
-export { store, tray, win }
+export { store, opensetting }

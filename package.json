@@ -23,6 +23,7 @@
         "camelcase": "^5.0.0",
         "cheerio": "^1.0.0-rc.2",
         "electron-auto-setting": "^2.1.1",
+        "electron-positioner": "^3.0.1",
         "electron-util": "^0.9.0",
         "fast-glob": "^2.2.2",
         "from2": "^2.3.0",

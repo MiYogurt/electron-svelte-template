@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain as ipc } from 'electron'
+import { app, BrowserWindow, ipcMain as ipc, Tray, Menu } from 'electron'
 import util from 'electron-util'
 import { fromEvent } from 'rxjs'
 import download from './download'
@@ -8,9 +8,13 @@ import transform from './TTS'
 import { store } from './tray'
 import { resolve } from 'path'
 import loadPlugins from './plugins'
+import Positioner from 'electron-positioner'
+import { opensetting } from './tray'
 
 let mainWindow: BrowserWindow | null
 let plugins: any[]
+let tray: Tray
+let positioner: any
 
 function createMainWindow(opts?: Electron.BrowserWindowConstructorOptions) {
   const win = new BrowserWindow(opts)
@@ -43,18 +47,18 @@ function pluginSetUp() {
 
 function crawlSetUp() {
   on('download').subscribe(async ({ event, args }) => {
-    const plugin = plugins.find((plugin: any) => plugin.regexp.test(args.url))
-    if (!plugin) {
-      return log({ type: 'plugin', message: 'not support' })
+    const plugin = plugins.find((plugin: any) => args.url.match(plugin.regexp))
+    if (typeof plugin == 'undefined') {
+      log({ type: 'error', message: '没有找到处理该页面的规则' })
+      return
     }
-
     const { folderName, url } = args
     const savePath = resolve(
       store.get('SAVA_PATH', app.getPath('music')),
       folderName
     )
     store.set('stop', false)
-    await download(url, plugin, { path: savePath })
+    // await download(url, plugin, { path: savePath })
     await transform(savePath)
     store.set('stop', false)
   })
@@ -64,13 +68,48 @@ function crawlSetUp() {
   })
 }
 
+function setPostion(win: BrowserWindow) {
+  positioner = new Positioner(win)
+  positioner.move('trayCenter', tray.getBounds())
+  win.show()
+}
+
+function createTray() {
+  tray = new Tray(resolve(__dirname, 'tray_w24h24.png'))
+  const contextMenu = Menu.buildFromTemplate([
+    { label: '设置', click: opensetting },
+    {
+      label: '退出',
+      role: 'quit'
+    }
+  ])
+  const toggle = () => {
+    if (!mainWindow) {
+      return
+    }
+    if (mainWindow.isVisible()) {
+      return mainWindow.hide()
+    }
+    positioner.move('trayCenter', tray.getBounds())
+    mainWindow.show()
+  }
+  tray.on('click', toggle)
+  tray.on('double-click', toggle)
+  tray.on('right-click', () => {
+    tray.popUpContextMenu(contextMenu)
+  })
+}
+
 async function ready() {
   mainWindow = createMainWindow({
     width: 400,
     height: 560,
     frame: false,
-    transparent: true
+    transparent: true,
+    show: false
   })
+  createTray()
+  setPostion(mainWindow)
   pluginSetUp()
   crawlSetUp()
 }
@@ -98,5 +137,6 @@ Object.keys(AppEventMap).map(eventName =>
 )
 
 process.on('unhandledRejection', console.log)
+process.on('uncaughtException', console.log)
 
 export { mainWindow }

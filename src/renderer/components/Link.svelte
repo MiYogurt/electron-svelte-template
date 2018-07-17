@@ -9,6 +9,9 @@
                 e.preventDefault();
                 this.store.changePage(this.get().to)
             }, false)
+            this.refs.link.addEventListener('dragstart', (e) => {
+                e.preventDefault();
+            }, false)
         }
     }
 </script>

@@ -46,7 +46,7 @@ const getSelector = (url: string, charset?: string) =>
     map(decodeCharset(charset)),
     map(toSelector),
     catchError(err => {
-      log({ type: 'crawl', step: 'error', message: err.message })
+      log({ type: 'error', message: err.message })
       return of(err)
     })
   )
@@ -128,7 +128,7 @@ async function downloadAllText(crawl: Crawl, opts: Required<downloadOptions>) {
     if (
       await handleStop(resolve(path, 'text'), {
         type: 'stop',
-        message: '已停止该队列'
+        message: '已停止下载队列'
       })
     ) {
       break

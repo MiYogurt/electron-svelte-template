@@ -8,13 +8,16 @@ import { ready, handleStop } from './helper'
 import log from './statusLog'
 
 import { store } from './tray'
+import { timer } from 'rxjs'
 
 let APP_ID = store.get('APP_ID')
 let API_KEY = store.get('API_KEY')
 let SECRET_KEY = store.get('SECRET_KEY')
+let TTS_WAIT = store.get('TTS_WAIT')
 store.onDidChange('APP_ID', (newValue: any) => (APP_ID = newValue))
 store.onDidChange('API_KEY', (newValue: any) => (API_KEY = newValue))
 store.onDidChange('SECRET_KEY', (newValue: any) => (SECRET_KEY = newValue))
+store.onDidChange('TTS_WAIT', (newValue: any) => (TTS_WAIT = newValue))
 
 let client: any = null
 
@@ -46,14 +49,14 @@ const saveFile = (datas: Buffer[], path: string) => {
   return promise
 }
 
-const getMp3Data = async (text: string, opts: any = {}) => {
+const getMp3Data: any = async (text: string, opts: any = {}) => {
   const textArr = splitText(text)
   return Promise.all(
     textArr.map(async chunk => {
       const { data } = await client.text2audio(chunk, opts)
       return data
     })
-  )
+  ).catch(() => getMp3Data(text, opts))
 }
 
 const transform = async (pathRoot: string) => {
@@ -62,18 +65,17 @@ const transform = async (pathRoot: string) => {
   await ensureDir(chapterSavePath)
   try {
     const chapters = await readJson(chaptersPath)
-    let i = 0
+    let i = 215
     const len = chapters.length
     while (i < len) {
       if (
         await handleStop(chapterSavePath, {
           type: 'stop',
-          message: '已停止该队列'
+          message: '已停止音频队列'
         })
       ) {
         break
       }
-
       let chapter = chapters[i]
       const chapterPath = resolve(
         pathRoot,
@@ -82,6 +84,7 @@ const transform = async (pathRoot: string) => {
       )
       const text = await readJson(chapterPath)
       const datas = await getMp3Data(text, client)
+      await timer(TTS_WAIT).toPromise()
       await saveFile(
         datas,
         resolve(chapterSavePath, `${i}-${chapter.title}.mp3`)
@@ -94,7 +97,7 @@ const transform = async (pathRoot: string) => {
       i += 1
     }
   } catch (error) {
-    log({ type: 'audio', step: 'error', message: error.message })
+    log({ type: 'error', message: error.message })
   }
 }
 
