@@ -57,7 +57,7 @@ let setting = [
 init(setting)
 
 function opensetting() {
-  win = create({}, true)
+  win = create()
 }
 
 export { store, opensetting }

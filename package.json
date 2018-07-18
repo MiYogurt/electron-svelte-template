@@ -1,12 +1,20 @@
 {
-    "name": "electron-webpack-quick-start",
-    "version": "0.0.0",
+    "name": "reader",
+    "version": "0.0.1",
     "license": "MIT",
     "scripts": {
         "dev": "electron-webpack dev",
-        "compile": "electron-webpack",
+        "compile": "NODE_ENV=production electron-webpack",
+        "postcompile": "cp ./src/main/tray_w24h24.png ./dist/main",
         "dist": "npm run compile && electron-builder",
         "dist:dir": "npm run dist --dir -c.compression=store -c.mac.identity=null"
+    },
+    "build": {
+        "appId": "me.yugo",
+        "mac": {
+            "category": "me.yugo",
+            "icon": "./music.icns"
+        }
     },
     "electronWebpack": {
         "whiteListedModules": [

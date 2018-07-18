@@ -6,10 +6,11 @@ import log from './statusLog'
 import { on } from './helper'
 import transform from './TTS'
 import { store } from './tray'
-import { resolve } from 'path'
+import { resolve, join } from 'path'
 import loadPlugins from './plugins'
 import Positioner from 'electron-positioner'
 import { opensetting } from './tray'
+import { format as formatUrl } from 'url'
 
 let mainWindow: BrowserWindow | null
 let plugins: any[]
@@ -18,12 +19,17 @@ let positioner: any
 
 function createMainWindow(opts?: Electron.BrowserWindowConstructorOptions) {
   const win = new BrowserWindow(opts)
-
-  if (util.is.development) {
+  if (process.env.NODE_ENV != 'production') {
     win.webContents.openDevTools()
     win.loadURL(`http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}`)
   } else {
-    util.loadFile(win, 'index.html')
+    win.loadURL(
+      formatUrl({
+        pathname: join(__dirname, 'index.html'),
+        protocol: 'file',
+        slashes: true
+      })
+    )
   }
 
   fromEvent(<any>win, 'close').subscribe(() => (mainWindow = null))
@@ -106,12 +112,16 @@ async function ready() {
     height: 560,
     frame: false,
     transparent: true,
-    show: false
+    show: false,
+    webPreferences: {
+      webSecurity: false
+    }
   })
   createTray()
   setPostion(mainWindow)
   pluginSetUp()
   crawlSetUp()
+  app.dock.hide()
 }
 
 function windowAllClosed(): void {

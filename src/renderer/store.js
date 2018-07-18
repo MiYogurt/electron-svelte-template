@@ -1,5 +1,4 @@
 import { Store } from 'svelte/store.js';
-import Status from './pages/Status.svelte'
 import Download from './pages/Download.svelte'
 import CrawlStore from './pages/CrawlStore.svelte'
 import Main from './pages/Main.svelte'
@@ -10,14 +9,16 @@ const store = new Store({
         type: 'success',
         content: ''
     },
-    start: false
+    start: false,
+    files: [],
+    index: 0,
+    music: false
 });
 
 store.changePage = changePage.bind(store)
 
 function changePage(pageName) {
     const map = {
-        Status,
         Download,
         Main,
         CrawlStore

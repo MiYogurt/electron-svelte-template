@@ -7,6 +7,9 @@
         oncreate() {
             this.refs.link.addEventListener('click', (e) => {
                 e.preventDefault();
+                this.store.set({
+                    music: false
+                })
                 this.store.changePage(this.get().to)
             }, false)
             this.refs.link.addEventListener('dragstart', (e) => {
