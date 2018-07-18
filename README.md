@@ -1,46 +1,9 @@
-# electron-webpack-quick-start
-> A bare minimum project structure to get started developing with [`electron-webpack`](https://github.com/electron-userland/electron-webpack).
+# 使用说明
 
-Thanks to the power of `electron-webpack` this template comes packed with...
-
-* Use of [`webpack-dev-server`](https://github.com/webpack/webpack-dev-server) for development
-* HMR for both `renderer` and `main` processes
-* Use of [`babel-preset-env`](https://github.com/babel/babel-preset-env) that is automatically configured based on your `electron` version
-* Use of [`electron-builder`](https://github.com/electron-userland/electron-builder) to package and build a distributable electron application
-
-Make sure to check out [`electron-webpack`'s documentation](https://webpack.electron.build/) for more details.
-
-## Getting Started
-Simply clone down this reposity, install dependencies, and get started on your application.
-
-The use of the [yarn](https://yarnpkg.com/) package manager is **strongly** recommended, as opposed to using `npm`.
+仅支持 mac， 首先安装 mp3cat 用于连接音频。
 
 ```bash
-# create a directory of your choice, and copy template using curl
-mkdir new-electron-webpack-project && cd new-electron-webpack-project
-curl -fsSL https://github.com/electron-userland/electron-webpack-quick-start/archive/master.tar.gz | tar -xz --strip-components 1
-
-# or copy template using git clone
-git clone https://github.com/electron-userland/electron-webpack-quick-start.git
-cd electron-webpack-quick-start
-rm -rf .git
-
-# install dependencies
-yarn
+brew install mp3cat
 ```
 
-### Development Scripts
-
-```bash
-# run application in development mode
-yarn dev
-
-# compile source code and create webpack output
-yarn compile
-
-# `yarn compile` & create build with electron-builder
-yarn dist
-
-# `yarn compile` & create unpacked build with electron-builder
-yarn dist:dir
-```
+打开软件商店下载插件仅有的插件，仅仅支持 ybdu.com 的小说。到 https://ai.baidu.com/docs#/TTS-Online-Node-SDK/top 阅读文档，申请你的 APP_ID 、API_KEY 、SECRET_KEY。在设置里面填写他们。然后进入抓取页面，输入存储文件名，和地址 `https://www.ybdu.com/xiaoshuo/0/910/` ， 地址必须是目录页。
